@@ -1,0 +1,87 @@
+<mvc:View
+    controllerName="project3.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page showHeader="false">
+        <HBox >
+        <VBox class="sapUiSmallMarginBegin sapUiSmallMarginTop">
+            <Label text="Name" />
+            <SearchField
+                id="Name"
+                width="16rem"
+                placeholder="search by product"
+                search="onSearchByProduct"
+            />
+        </VBox>
+
+        <VBox class="sapUiSmallMarginBegin sapUiSmallMarginTop">
+            <Label text="ID" />
+            <SearchField
+                id="ID"
+                width="16rem"
+                placeholder="search by ID"
+                search="onSearchByID"
+            />
+        </VBox>
+
+        <Button text="Filter" press="onFilterTable" width="5rem" class="sapUiLargeMarginBegin sapUiSmallMarginTop"></Button>
+        <Button text="Next Page" press="onNextScreen" type="Emphasized" width="6rem" class="sapUiLargeMarginBegin sapUiSmallMarginTop"></Button>
+
+        </HBox>
+        <Table
+            id="idProductsTable"
+            noDataText="No Data Found"
+            inset="true"
+            items="{path: '/Products', sorter:{
+            path: 'ID',
+            descending:false
+            } }"
+            growing="true"
+            itemPress="onItemPress"
+            growingThreshold="8"
+            growingScrollToLoad="true"
+            mode="SingleSelectMaster"
+        >
+            <headerToolbar>
+                <OverflowToolbar>
+                    <content>
+                        <Title text="Products" />
+                        <ToolbarSpacer />
+                        <Button
+                            text="Add Product"
+                            type="Emphasized"
+                            icon="sap-icon://add-product"
+                            press="onAddProduct"
+                        />
+                    </content>
+                </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column>
+                    <Text text="ID" />
+                </Column>
+                <Column>
+                    <Text text="Name" />
+                </Column>
+                <Column>
+                    <Text text="Release Date" />
+                </Column>
+                <Column>
+                    <Text text="Price" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem type="Navigation">
+                    <cells>
+                        <Text text="{ID}" />
+                        <Text text="{Name}" />
+                        <Text text="{ReleaseDate}" />
+                        <Text text="{path : 'Price', formatter: '.formatter.formatUnitPrice'}" />
+                        
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+    </Page>
+</mvc:View>
