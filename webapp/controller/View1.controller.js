@@ -5,9 +5,10 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "project3/model/formatter",
     "sap/ui/core/Fragment",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "sap/ui/model/json/JSONModel"
 
-], (Controller, MessageToast, Filter, FilterOperator, formatter, Fragment, MessageBox) => {
+], (Controller, MessageToast, Filter, FilterOperator, formatter, Fragment, MessageBox, JSONModel) => {
     "use strict";
     return Controller.extend("project3.controller.View1", {
 
@@ -151,10 +152,21 @@ sap.ui.define([
             // So it is already loaded in memory so it will not try to load again again it will just open directly without any depedenies
             this.pAddDialog.then(function (oDialog) {
                 oDialog.open();
-            });
+
+                // creating JSON Model 
+                // we can fetch dialog values using two ways 1) by ID and getValue() 2) by JSONModel create and fetch using values 
+
+                const obj = {ID:"", Name:"", ReleaseDate:null, Price:null};
+                const jsonModel = new JSONModel();
+                jsonModel.setData(obj);
+                this.getView().setModel(jsonModel, "newProduct");
+            }.bind(this));
         },
 
+// ------------- this method is used to create a new product with fetching the values of inputs using 'getId()' method --------------------- //
         onCreateProduct: function () {
+
+            const that = this;
 
             // first fetch the mandatory fields(required true fields)
 
@@ -188,12 +200,49 @@ sap.ui.define([
             oDataModel.create("/Products", oNewProduct, {              // .create/.read/.remove/.update methods on which entity and dialog
                 success: function () {
                     MessageToast.show("Product Created");
+                    that.OnCancelDialog();
+
                 },
                 error: function (oError) {
                     MessageToast.show("Product Creation Failed. The error is : " + error);
                 }
             });
 
+        },
+
+// ---------------- this method is used to create a new product using JSON Model --------------------------- //
+        onCreateproductUsingJSONModel: function(){
+
+            const oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            const that = this;
+            const jsonModel = this.getView().getModel("newProduct");
+            const data = jsonModel.getData();
+
+            if(!data.ID ||!data.Name || !data.ReleaseDate || !data.Price){
+                MessageBox.error("ID, Name, Date, Orice is required");
+                return;
+            }
+
+            data.__metadata = {type: "ODataDemo.Product"};
+            const oDataModel = this.getView().getModel();               // fetch the model for data 
+            oDataModel.setUseBatch(false);                             // Disable batch requests to avoid Content-ID 400 error from the OData demo service.
+            oDataModel.create("/Products", data, {                    // .create/.read/.remove/.update methods on which entity and dialog
+                success: function () {
+                    MessageToast.show(oBundle.getText("productCreation"));  // text shoing from i18n model 
+                    that.OnCancelDialog();
+
+                },
+                error: function (oError) {
+                    MessageToast.show("Product Creation Failed. The error is : " + oError);
+                }
+            });
+        },
+
+        OnCancelDialog : function()
+        {
+            this.pAddDialog.then(function(oDialog){
+                oDialog.close();
+            }); 
         }
 
 

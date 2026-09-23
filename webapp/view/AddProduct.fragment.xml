@@ -13,26 +13,24 @@
             editable="true"
         >
             <form:content>
-                <!-- <Label text="ID" required="true"/>
-                <Input id="inputID" placeholder="ID"/> -->
 
-                <Label text="ID" required="true"/>
-                <Input id="inputID" placeholder="0"/>
+                <Label text="{i18n>ID}" required="true"/>
+                <Input id="inputID" value="{newProduct>/ID}" placeholder="0"/>
 
-                <Label text="Name" required="true"/>
-                <Input id="inputName" placeholder="ABC"/>
+                <Label text="{i18n>name}" required="true"/>
+                <Input id="inputName" value="{newProduct>/Name}"  placeholder="ABC"/>
 
-                <Label text="Release Date" required="true" />
-                <DatePicker id="inputReleaseDate" placeholder="dd-MM-yyyy" />
+                <Label text="{i18n>ReleaseDate}" required="true" />
+                <DatePicker id="inputReleaseDate" value="{path: 'newProduct>/ReleaseDate' ,type:'sap.ui.model.type.Date', formatOptions:{pattern: 'dd-MM-yyyy'}}"  placeholder="dd-MM-yyyy" displayFormat="dd-MM-yyyy" />
 
-                <Label text="Price" required="true"/>
-                <Input id="inputPrice" placeholder="0.00" type="Number" />
+                <Label text="{i18n>Price}" required="true"/>
+                <Input id="inputPrice" value="{newProduct>/Price}"  placeholder="0.00" type="Number" />
                 
             </form:content>
         </form:SimpleForm>
 
         <beginButton>
-            <Button text="Submit" type="Emphasized" press="onCreateProduct"/>
+            <Button text="Submit" type="Emphasized" press="onCreateproductUsingJSONModel"/>
         </beginButton>
 
         <endButton>
